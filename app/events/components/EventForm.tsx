@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { eventFormSchema, EventFormValues } from "@/lib/validation/eventSchema";
-import { createEvent } from "../actions/eventActions"; // Import the Server Action
+import { createEvent } from "../actions/eventActions";
 
 const EventForm = () => {
   const {
