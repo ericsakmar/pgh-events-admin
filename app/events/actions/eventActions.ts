@@ -23,7 +23,7 @@ export async function createEvent(values: EventFormValues) {
 
     return {
       success: true,
-      message: "Event created successfully!",
+      message: "Thanks! Your event should appear on the site within 24 hours.",
       event: newEvent,
     };
   } catch (error) {
