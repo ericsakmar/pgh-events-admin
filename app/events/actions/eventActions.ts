@@ -2,6 +2,7 @@
 
 import { eventFormSchema, EventFormValues } from "@/lib/validation/eventSchema";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function createEvent(values: EventFormValues) {
   try {
@@ -49,6 +50,34 @@ export async function createEvent(values: EventFormValues) {
     }
     console.error("Server Action Error:", error);
     return { success: false, message: "An unexpected error occurred." };
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function updateEventApproval(
+  eventId: string,
+  approvedStatus: boolean
+) {
+  try {
+    const updatedEvent = await prisma.event.update({
+      where: { id: eventId },
+      data: { approved: approvedStatus },
+    });
+
+    revalidatePath("/events");
+
+    return {
+      success: true,
+      message: "Event approval status updated successfully!",
+      event: updatedEvent,
+    };
+  } catch (error) {
+    console.error(`Error updating event ${eventId} approval:`, error);
+    return {
+      success: false,
+      message: "Failed to update event approval status.",
+    };
   } finally {
     await prisma.$disconnect();
   }

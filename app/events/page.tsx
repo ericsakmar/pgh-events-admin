@@ -1,7 +1,12 @@
 import prisma from "@/lib/prisma";
+import ApprovalToggle from "./components/ApprovalToggle";
 
 export default async function Home() {
-  const events = await prisma.event.findMany();
+  const events = await prisma.event.findMany({
+    orderBy: {
+      date: "asc",
+    },
+  });
 
   return (
     <div className="max-w-full mx-4 my-10">
@@ -32,7 +37,7 @@ export default async function Home() {
               <td>{e.eventLink}</td>
               <td>{e.posterLink}</td>
               <td>
-                <input type="checkbox" />
+                <ApprovalToggle id={e.id} approved={e.approved} />
               </td>
               <td>
                 <button>delete</button>
