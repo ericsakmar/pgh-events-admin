@@ -24,7 +24,7 @@ export default async function Home() {
             <th className="text-left">Date and time</th>
             <th className="text-left">Link</th>
             <th className="text-left">Poster</th>
-            <th className="text-right">Approved?</th>
+            <th className="text-center">Approved?</th>
             <th className="text-left"></th>
           </tr>
         </thead>
@@ -57,7 +57,7 @@ export default async function Home() {
                   </a>
                 ) : null}
               </td>
-              <td className="text-right p-1">
+              <td className="text-center p-1">
                 <ApprovalToggle id={e.id} approved={e.approved} />
               </td>
               <td className="p-1">

@@ -6,6 +6,7 @@ import {
 } from "@/lib/validation/eventSchema";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { utapi } from "@/lib/uploadthing";
 
 export async function createEvent(values: CreateEventValues) {
   try {
@@ -93,15 +94,36 @@ export async function deleteEvent(formData: FormData) {
   }
 
   try {
-    // TODO delete the poster
-    await prisma.event.delete({
+    // deletes the event
+    const deleted = await prisma.event.delete({
       where: { id: eventId },
     });
+
+    // deletes the poster
+    if (deleted.posterLink) {
+      const fileKey = getFileKeyFromUrl(deleted.posterLink);
+      if (fileKey) {
+        await utapi.deleteFiles(fileKey);
+      }
+    }
 
     revalidatePath("/events");
   } catch (error) {
     console.error(`Error deleting event ${eventId}:`, error);
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+function getFileKeyFromUrl(url: string) {
+  try {
+    const urlObject = new URL(url);
+    const pathname = urlObject.pathname; // Gets "/f/<FILE_KEY>"
+    const parts = pathname.split("/");
+    // The FILE_KEY will be the last element if the format is consistent
+    return parts[parts.length - 1];
+  } catch (error) {
+    console.error("Invalid URL:", error);
+    return null; // Or throw an error, depending on your error handling
   }
 }
