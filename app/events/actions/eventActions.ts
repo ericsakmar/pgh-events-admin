@@ -7,6 +7,7 @@ import {
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { utapi } from "@/lib/uploadthing";
+import { ZodError } from "zod/v3";
 
 export async function createEvent(values: CreateEventValues) {
   try {
@@ -32,7 +33,7 @@ export async function createEvent(values: CreateEventValues) {
       event: newEvent,
     };
   } catch (error) {
-    if (error instanceof Error && "issues" in error) {
+    if (error instanceof ZodError) {
       // Zod validation error: Return specific errors
       const fieldErrors = error.issues.reduce(
         (acc: Record<string, string[]>, issue) => {
