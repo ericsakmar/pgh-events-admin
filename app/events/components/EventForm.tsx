@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { eventFormSchema, EventFormValues } from "@/lib/validation/eventSchema";
 import { createEvent } from "../actions/eventActions";
+import { useUploadThing } from "@/app/api/uploadthing/helpers";
 
 const EventForm = () => {
   const {
@@ -13,19 +14,37 @@ const EventForm = () => {
     setError,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<EventFormValues>({
+  } = useForm({
     resolver: zodResolver(eventFormSchema),
   });
 
   const [successMessage, setSuccessMessage] = useState<string | null>();
   const [errorMessage, setErrorMessage] = useState<string | null>();
+  const { startUpload } = useUploadThing("imageUploader");
 
   const onSubmit = async (data: EventFormValues) => {
     setSuccessMessage(null);
     setErrorMessage(null);
 
     try {
-      const result = await createEvent(data);
+      // first upload the file
+      let posterLink: string | undefined = undefined;
+      const file = data.poster;
+
+      if (file) {
+        const res = await startUpload([file]);
+
+        if (res && res.length > 0) {
+          posterLink = res[0].ufsUrl;
+        } else {
+          // failure, stop submission
+          setErrorMessage("Poster upload failed. Please try again.");
+          return;
+        }
+      }
+
+      // continue with creating the event
+      const result = await createEvent({ ...data, posterLink });
 
       if (result.success) {
         setSuccessMessage(result.message);
@@ -47,6 +66,8 @@ const EventForm = () => {
       setErrorMessage("An unexpected error occurred.");
     }
   };
+
+  const disabled = isSubmitting;
 
   return (
     <>
@@ -71,7 +92,8 @@ const EventForm = () => {
             id="email"
             type="email"
             {...register("email")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
           {errors.email && (
             <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
@@ -85,7 +107,8 @@ const EventForm = () => {
           <input
             id="name"
             {...register("name")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
           {errors.name && (
             <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
@@ -99,7 +122,8 @@ const EventForm = () => {
           <input
             id="location"
             {...register("location")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
           {errors.location && (
             <p className="text-red-500 text-xs mt-1">
@@ -116,7 +140,8 @@ const EventForm = () => {
             id="date"
             type="datetime-local"
             {...register("date")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
           {errors.date && (
             <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>
@@ -131,7 +156,8 @@ const EventForm = () => {
             id="eventLink"
             type="url"
             {...register("eventLink")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
           {errors.eventLink && (
             <p className="text-red-500 text-xs mt-1">
@@ -146,21 +172,22 @@ const EventForm = () => {
           </label>
           <input
             id="posterLink"
-            type="url"
-            {...register("posterLink")}
-            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2"
+            type="file"
+            {...register("poster")}
+            multiple={false}
+            accept="image/png,image/jpeg,image/webp"
+            className="block w-full border border-very-dark bg-white text-very-dark font-dark rounded-md p-2 disabled:opacity-50"
+            disabled={disabled}
           />
-          {errors.posterLink && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.posterLink.message}
-            </p>
+          {errors.poster && (
+            <p className="text-red-500 text-xs mt-1">{errors.poster.message}</p>
           )}
         </div>
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="mt-6 inline-flex justify-center py-2 px-4 border border-transparent shadow-(--text-shadow) text-sm rounded-md text-very-dark font-bold bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={disabled}
+          className="mt-6 inline-flex justify-center py-2 px-4 border border-transparent shadow-(--text-shadow) text-sm rounded-md text-very-dark font-bold bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
         >
           {isSubmitting ? "Submitting..." : "Create Event"}
         </button>

@@ -1,12 +1,15 @@
 "use server";
 
-import { eventFormSchema, EventFormValues } from "@/lib/validation/eventSchema";
+import {
+  createEventSchema,
+  CreateEventValues,
+} from "@/lib/validation/eventSchema";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function createEvent(values: EventFormValues) {
+export async function createEvent(values: CreateEventValues) {
   try {
-    const validatedData = eventFormSchema.parse(values);
+    const validatedData = createEventSchema.parse(values);
 
     const eventData = {
       name: validatedData.name,
