@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import ApprovalToggle from "./components/ApprovalToggle";
+import DeleteButton from "./components/DeleteButton";
 
 export default async function Home() {
   const events = await prisma.event.findMany({
@@ -40,7 +41,7 @@ export default async function Home() {
                 <ApprovalToggle id={e.id} approved={e.approved} />
               </td>
               <td>
-                <button>delete</button>
+                <DeleteButton id={e.id} />
               </td>
             </tr>
           ))}

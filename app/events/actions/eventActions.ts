@@ -82,3 +82,23 @@ export async function updateEventApproval(
     await prisma.$disconnect();
   }
 }
+
+export async function deleteEvent(formData: FormData) {
+  const eventId = formData.get("id");
+  if (eventId === null || typeof eventId !== "string") {
+    return;
+  }
+
+  try {
+    // TODO delete the poster
+    await prisma.event.delete({
+      where: { id: eventId },
+    });
+
+    revalidatePath("/events");
+  } catch (error) {
+    console.error(`Error deleting event ${eventId}:`, error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
