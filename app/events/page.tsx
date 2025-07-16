@@ -31,11 +31,11 @@ export default async function Home() {
         <tbody>
           {events.map((e) => (
             <tr key={e.id} className="hover:bg-very-dark">
-              <td className="p-1">{e.email}</td>
-              <td className="p-1">{e.name}</td>
-              <td className="p-1">{e.location}</td>
-              <td className="p-1">{e.date.toLocaleString()}</td>
-              <td className="p-1">
+              <td className="pr-1">{e.email}</td>
+              <td className="pr-1">{e.name}</td>
+              <td className="pr-1">{e.location}</td>
+              <td className="pr-1">{e.date.toLocaleString()}</td>
+              <td className="pr-1">
                 {e.eventLink ? (
                   <a
                     href={e.eventLink}
@@ -46,7 +46,7 @@ export default async function Home() {
                   </a>
                 ) : null}
               </td>
-              <td className="p-1">
+              <td className="pr-1">
                 {e.posterLink ? (
                   <a
                     href={e.posterLink}
@@ -57,7 +57,7 @@ export default async function Home() {
                   </a>
                 ) : null}
               </td>
-              <td className="text-center p-1">
+              <td className="text-center pr-1">
                 <ApprovalToggle id={e.id} approved={e.approved} />
               </td>
               <td className="p-1">

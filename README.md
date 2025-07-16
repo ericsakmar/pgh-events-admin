@@ -1,3 +1,7 @@
+# pgh.events admin
+
+For adding things to [pgh.events](https://pgh.events).
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

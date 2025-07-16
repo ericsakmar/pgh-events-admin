@@ -14,8 +14,8 @@
 @theme inline {
   --color-background: var(--dark);
   --color-foreground: var(--light);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-pontano-sans);
+  --font-mono: "monospace";
   --font-header: var(--font-bevan);
   --color-very-dark: var(--very-dark);
   --color-light: var(--light);
@@ -27,5 +27,5 @@
 body {
   background: var(--dark);
   color: var(--light);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-pontano-sans);
 }
