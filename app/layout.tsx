@@ -11,6 +11,8 @@ const bevan = Bevan({
 
 const pontano = Pontano_Sans({
   variable: "--font-pontano-sans",
+  subsets: ["latin"],
+  weight: ["300", "500"],
 });
 
 export const metadata: Metadata = {
