@@ -24,23 +24,43 @@ export default async function Home() {
             <th className="text-left">Date and time</th>
             <th className="text-left">Link</th>
             <th className="text-left">Poster</th>
-            <th className="text-left">Approved?</th>
+            <th className="text-right">Approved?</th>
             <th className="text-left"></th>
           </tr>
         </thead>
         <tbody>
           {events.map((e) => (
-            <tr key={e.id}>
-              <td>{e.email}</td>
-              <td>{e.name}</td>
-              <td>{e.location}</td>
-              <td>{e.date.toLocaleString()}</td>
-              <td>{e.eventLink}</td>
-              <td>{e.posterLink}</td>
-              <td>
+            <tr key={e.id} className="hover:bg-very-dark">
+              <td className="p-1">{e.email}</td>
+              <td className="p-1">{e.name}</td>
+              <td className="p-1">{e.location}</td>
+              <td className="p-1">{e.date.toLocaleString()}</td>
+              <td className="p-1">
+                {e.eventLink ? (
+                  <a
+                    href={e.eventLink}
+                    target="_blank"
+                    className="text-accent underline"
+                  >
+                    link
+                  </a>
+                ) : null}
+              </td>
+              <td className="p-1">
+                {e.posterLink ? (
+                  <a
+                    href={e.posterLink}
+                    target="_blank"
+                    className="text-accent underline"
+                  >
+                    poster
+                  </a>
+                ) : null}
+              </td>
+              <td className="text-right p-1">
                 <ApprovalToggle id={e.id} approved={e.approved} />
               </td>
-              <td>
+              <td className="p-1">
                 <DeleteButton id={e.id} />
               </td>
             </tr>
