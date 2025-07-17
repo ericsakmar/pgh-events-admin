@@ -27,6 +27,8 @@ export async function createEvent(values: CreateEventValues) {
       data: eventData,
     });
 
+    revalidatePath("/events");
+
     return {
       success: true,
       message: "Thanks! Your event should appear on the site within 24 hours.",
