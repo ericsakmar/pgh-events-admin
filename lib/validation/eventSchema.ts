@@ -13,8 +13,14 @@ export const eventFormSchema = z.object({
       .custom<FileList>()
       .transform((list) => (list.length > 0 ? list[0] : null))
       .pipe(
-        z.file().max(4_000_000).mime(["image/png", "image/jpeg", "image/webp"])
-      )
+        z.union([
+          z
+            .file()
+            .max(4_000_000)
+            .mime(["image/png", "image/jpeg", "image/webp"]),
+          z.null(),
+        ]),
+      ),
   ),
 });
 

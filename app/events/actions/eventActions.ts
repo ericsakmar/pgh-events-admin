@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { utapi } from "@/lib/uploadthing";
 import { ZodError } from "zod/v3";
+import { sendNewEventNotificationEmail } from "@/lib/email";
 
 export async function createEvent(values: CreateEventValues) {
   try {
@@ -27,6 +28,7 @@ export async function createEvent(values: CreateEventValues) {
       data: eventData,
     });
 
+    await sendNewEventNotificationEmail(newEvent);
     revalidatePath("/events");
 
     return {
@@ -47,7 +49,7 @@ export async function createEvent(values: CreateEventValues) {
           }
           return acc;
         },
-        {}
+        {},
       );
       return {
         success: false,
@@ -64,7 +66,7 @@ export async function createEvent(values: CreateEventValues) {
 
 export async function updateEventApproval(
   eventId: string,
-  approvedStatus: boolean
+  approvedStatus: boolean,
 ) {
   try {
     const updatedEvent = await prisma.event.update({
