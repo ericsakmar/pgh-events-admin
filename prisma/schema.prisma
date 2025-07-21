@@ -27,7 +27,7 @@ model Event {
   name        String
   email       String
   location    String
-  date        DateTime  @db.Date
+  date        DateTime
   eventLink   String?
   posterLink  String?
   approved    Boolean   @default(false)
