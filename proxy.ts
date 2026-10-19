@@ -1,4 +1,4 @@
-export { default } from "next-auth/middleware";
+export { auth as proxy } from "@/lib/auth";
 
 export const config = {
   matcher: ["/!", "/!events/create", "/events"],
